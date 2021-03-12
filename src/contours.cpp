@@ -7,8 +7,12 @@
 #include <map>
 #include <set>
 
+UnionTree::UnionTree(long double coord, NodeEdgeType node_edge_type,
+                     UnionTree *left, UnionTree *right)
+    : coord(coord), node_edge_type(node_edge_type), left(left), right(right){};
+
 ContourStripes::ContourStripes(XInterval x_interval, YInterval y_interval,
-                               std::vector<XInterval> x_union)
+                               UnionTree *x_union)
     : x_interval(x_interval), y_interval(y_interval), x_union(x_union) {}
 
 std::vector<ContourStripes> copy_stripes(std::vector<ContourStripes> &s,
@@ -28,12 +32,19 @@ std::vector<ContourStripes> copy_stripes(std::vector<ContourStripes> &s,
 
 void blacken(std::vector<ContourStripes> &s,
              std::vector<std::pair<YInterval, int>> &J) {
+    int i = 0;
     for (auto &it : s) {
-        for (auto ed : J) {
-            if (it.y_interval.bottom >= ed.first.bottom &&
-                it.y_interval.top <= ed.first.top) {
-                it.x_union = std::vector<XInterval>(1, it.x_interval);
+        while (i < J.size()) {
+            if (it.y_interval.top <= J[i].first.top &&
+                it.y_interval.bottom >= J[i].first.bottom) {
+                it.x_union = nullptr;
                 break;
+            } else {
+                if (it.y_interval.top <= J[i].first.top) {
+                    break;
+                } else {
+                    i++;
+                }
             }
         }
     }
@@ -45,29 +56,22 @@ std::vector<ContourStripes> concatenate(std::vector<ContourStripes> &s_left,
     std::vector<ContourStripes> s;
     int n = s_left.size();
     for (int i = 0; i < n; i++) {
-        int n1 = s_left[i].x_union.size();
-        int n2 = s_right[i].x_union.size();
-        std::vector<XInterval> new_x_union;
-        for (int j = 0; j < n1 - 1; j++) {
-            new_x_union.push_back(s_left[i].x_union[j]);
-        }
-        int rrst = 1;
-        if (s_left[i].x_union.size() == 0)
-            rrst = 0;
-        else if (s_right[i].x_union.size() == 0) {
-            new_x_union.push_back(s_left[i].x_union.back());
-        } else if (s_left[i].x_union.back().right ==
-                   s_right[i].x_union[0].left) {
-            new_x_union.push_back(XInterval(s_left[i].x_union.back().left,
-                                            s_right[i].x_union[0].right));
+        UnionTree *new_x_union = nullptr;
+        if (s_left[i].x_union) {
+            if (s_right[i].x_union) {
+                new_x_union =
+                    new UnionTree(s_left[i].x_interval.left, UNDEF,
+                                  s_left[i].x_union, s_right[i].x_union);
+            } else {
+                new_x_union = s_left[i].x_union;
+            }
         } else {
-            new_x_union.push_back(s_left[i].x_union.back());
-            new_x_union.push_back(s_right[i].x_union[0]);
+            if (s_right[i].x_union) {
+                new_x_union = s_right[i].x_union;
+            } else {
+            }
         }
-        for (int j = 1; j < n2; j++) {
-            new_x_union.push_back(s_right[i].x_union[j]);
-        }
-        // std::cout << "NUSZ: " << new_x_union.size() << "\n";
+
         s.push_back(ContourStripes(x_ext, s_left[i].y_interval, new_x_union));
     }
     return s;
@@ -88,15 +92,15 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
         P.push_back(edges[0].first.y_interval.top);
         P.push_back(LDBL_MAX);
         for (int i = 1; i < P.size(); i++) {
-            s.push_back(ContourStripes(x_ext, YInterval(P[i - 1], P[i]),
-                                       std::vector<XInterval>()));
+            s.push_back(
+                ContourStripes(x_ext, YInterval(P[i - 1], P[i]), nullptr));
         }
         if (edges[0].first.edge_type == LEFT) {
-            s[1].x_union.push_back(
-                XInterval(edges[0].first.x_coordinate, x_ext.right));
+            s[1].x_union = new UnionTree(edges[0].first.x_coordinate, LEFT_U,
+                                         nullptr, nullptr);
         } else {
-            s[1].x_union.push_back(
-                XInterval(x_ext.left, edges[0].first.x_coordinate));
+            s[1].x_union = new UnionTree(edges[0].first.x_coordinate, RIGHT_U,
+                                         nullptr, nullptr);
         }
     } else {
         // Divide
@@ -137,23 +141,39 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
         }
 
         // L Union
-        for (auto it : L_left) {
-            if (cnt[it.second] < 2) {
-                L.push_back(it);
+        int i = 0, j = 0;
+        while (i < L_left.size() || j < L_right.size()) {
+            if (i < L_left.size() && cnt[L_left[i].second] >= 2) {
+                i++;
+                continue;
             }
-        }
-        for (auto it : L_right) {
-            L.push_back(it);
+            if (i >= L_left.size()) {
+                L.push_back(L_right[j++]);
+            } else if (j >= L_right.size()) {
+                L.push_back(L_left[i++]);
+            } else if (L_left[i].first.bottom < L_right[j].first.bottom) {
+                L.push_back(L_left[i++]);
+            } else {
+                L.push_back(L_right[j++]);
+            }
         }
 
         // R Union
-        for (auto it : R_right) {
-            if (cnt[it.second] < 2) {
-                R.push_back(it);
+        i = 0, j = 0;
+        while (i < R_right.size() || j < R_left.size()) {
+            if (i < R_right.size() && cnt[R_right[i].second] >= 2) {
+                i++;
+                continue;
             }
-        }
-        for (auto it : R_left) {
-            R.push_back(it);
+            if (i >= R_right.size()) {
+                R.push_back(R_left[j++]);
+            } else if (j >= R_left.size()) {
+                R.push_back(R_right[i++]);
+            } else if (R_right[i].first.bottom < R_left[j].first.bottom) {
+                R.push_back(R_right[i++]);
+            } else {
+                R.push_back(R_left[j++]);
+            }
         }
 
         // P Union
