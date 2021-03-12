@@ -28,12 +28,19 @@ std::vector<MeasureStripes> copy_stripes(std::vector<MeasureStripes> &s,
 
 void blacken(std::vector<MeasureStripes> &s,
              std::vector<std::pair<YInterval, int>> &J) {
+    int i = 0;
     for (auto &it : s) {
-        for (auto ed : J) {
-            if (it.y_interval.bottom >= ed.first.bottom &&
-                it.y_interval.top <= ed.first.top) {
+        while (i < J.size()) {
+            if (it.y_interval.top <= J[i].first.top &&
+                it.y_interval.bottom >= J[i].first.bottom) {
                 it.x_union = it.x_interval.right - it.x_interval.left;
                 break;
+            } else {
+                if (it.y_interval.top <= J[i].first.top) {
+                    break;
+                } else {
+                    i++;
+                }
             }
         }
     }
@@ -113,23 +120,39 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
         }
 
         // L Union
-        for (auto it : L_left) {
-            if (cnt[it.second] < 2) {
-                L.push_back(it);
+        int i = 0, j = 0;
+        while (i < L_left.size() || j < L_right.size()) {
+            if (i < L_left.size() && cnt[L_left[i].second] >= 2) {
+                i++;
+                continue;
             }
-        }
-        for (auto it : L_right) {
-            L.push_back(it);
+            if (i >= L_left.size()) {
+                L.push_back(L_right[j++]);
+            } else if (j >= L_right.size()) {
+                L.push_back(L_left[i++]);
+            } else if (L_left[i].first.bottom < L_right[j].first.bottom) {
+                L.push_back(L_left[i++]);
+            } else {
+                L.push_back(L_right[j++]);
+            }
         }
 
         // R Union
-        for (auto it : R_right) {
-            if (cnt[it.second] < 2) {
-                R.push_back(it);
+        i = 0, j = 0;
+        while (i < R_right.size() || j < R_left.size()) {
+            if (i < R_right.size() && cnt[R_right[i].second] >= 2) {
+                i++;
+                continue;
             }
-        }
-        for (auto it : R_left) {
-            R.push_back(it);
+            if (i >= R_right.size()) {
+                R.push_back(R_left[j++]);
+            } else if (j >= R_left.size()) {
+                R.push_back(R_right[i++]);
+            } else if (R_right[i].first.bottom < R_left[j].first.bottom) {
+                R.push_back(R_right[i++]);
+            } else {
+                R.push_back(R_left[j++]);
+            }
         }
 
         // P Union
