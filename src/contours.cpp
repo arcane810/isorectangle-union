@@ -208,6 +208,9 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
     }
 }
 
+// std::vector<std::pair<Point, Point>>
+// contour_pieces(HorizontalEdge h, std::vector<ContourStripes> s) {}
+
 std::vector<std::pair<Point, Point>>
 getContours(std::vector<Rectangle> rectangles) {
     std::vector<std::pair<YInterval, int>> L;
@@ -235,17 +238,43 @@ getContours(std::vector<Rectangle> rectangles) {
     };
     std::sort(edges.begin(), edges.end(), cmp);
     stripes(edges, XInterval(-LDBL_MAX, LDBL_MAX), L, R, P, s);
-    // std::cout << "\n///////////////////////////////\nSTRIPS\n";
-    // for (auto stripe : s) {
-    //     std::cout << " XINT: " << stripe.x_interval.left << " "
-    //               << stripe.x_interval.right << " "
-    //               << " YINT: " << stripe.y_interval.bottom << " "
-    //               << stripe.y_interval.top << "\n";
-    //     for (auto it : stripe.x_union) {
-    //         std::cout << it.left << " " << it.right << "\n";
-    //     }
-    //     std::cout << "========================\n";
-    // }
+    std::vector<HorizontalEdge> horizontal_edges;
+    for (Rectangle rectangle : rectangles) {
+        horizontal_edges.push_back(HorizontalEdge(
+            rectangle.x_interval, rectangle.y_interval.top, TOP));
+        horizontal_edges.push_back(HorizontalEdge(
+            rectangle.x_interval, rectangle.y_interval.bottom, BOTTOM));
+    }
+    auto cmp2 = [](HorizontalEdge e1, HorizontalEdge e2) {
+        if (e1.y_coordinate == e2.y_coordinate) {
+            if (e1.edge_type == BOTTOM) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return e1.y_coordinate < e2.y_coordinate;
+        }
+    };
+    sort(horizontal_edges.begin(), horizontal_edges.end(), cmp2);
+    int i1 = 0;
+    int i2 = 0;
+    for (HorizontalEdge h : horizontal_edges) {
+        int seli = 0;
+        if (h.edge_type == BOTTOM) {
+            while (s[i1].y_interval.top < h.y_coordinate) {
+                i1++;
+            }
+            seli = i1;
+        } else {
+            while (s[i2].y_interval.bottom < h.y_coordinate) {
+                i2++;
+            }
+            seli = i2;
+        }
+        long double x_l = h.x_interval.left;
+    }
+
     std::vector<std::pair<Point, Point>> ed;
     return ed;
 }

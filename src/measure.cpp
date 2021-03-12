@@ -11,6 +11,13 @@ MeasureStripes::MeasureStripes(XInterval x_interval, YInterval y_interval,
                                long double x_union)
     : x_interval(x_interval), y_interval(y_interval), x_union(x_union) {}
 
+/**
+ * Copies the stripe and split into partitions as per P
+ * @param s set of stripes
+ * @param P set of partition borders
+ * @param x_int x interval of the strip
+ * @return set of new strips
+ */
 std::vector<MeasureStripes> copy_stripes(std::vector<MeasureStripes> &s,
                                          std::vector<long double> &P,
                                          XInterval x_int) {
@@ -26,6 +33,12 @@ std::vector<MeasureStripes> copy_stripes(std::vector<MeasureStripes> &s,
     return s_copy;
 }
 
+/**
+ * Adds the entire interval to x_union for unmerged edges tha cross entire
+ * interval
+ * @param s set of stripes
+ * @param J set of y ptojection of edges
+ */
 void blacken(std::vector<MeasureStripes> &s,
              std::vector<std::pair<YInterval, int>> &J) {
     int i = 0;
@@ -45,6 +58,15 @@ void blacken(std::vector<MeasureStripes> &s,
         }
     }
 }
+
+/**
+ * Concatenates the left and right strips after they are copied and blackened
+ * @param s_left set of stripes of left part
+ * @param s_right set of stripes of right part
+ * @param P set of partition borders
+ * @param x_ext the x interval of the combined stripes
+ * @return set of concatenated strips
+ */
 std::vector<MeasureStripes> concatenate(std::vector<MeasureStripes> &s_left,
                                         std::vector<MeasureStripes> &s_right,
                                         std::vector<long double> &P,
@@ -59,6 +81,18 @@ std::vector<MeasureStripes> concatenate(std::vector<MeasureStripes> &s_left,
     return s;
 }
 
+/**
+ * Recursive divide and conquer call to get the set of stripes
+ * @param edges set of vertical edges of the rectangle in the interval x_ext
+ * @param x_ext the x interval
+ * @param L set of y projections of unmerged left edges to which the merged left
+ * edges are added
+ * @param R set of y projections of unmerged right edges to which the merged
+ * right edges are added
+ * @param P set of partition borders to which new partition borders are to be
+ * added
+ * @param s set of stripes to which stripes are to be added
+ */
 void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
              std::vector<std::pair<YInterval, int>> &L,
              std::vector<std::pair<YInterval, int>> &R,

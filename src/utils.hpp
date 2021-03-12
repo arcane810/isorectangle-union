@@ -107,6 +107,32 @@ class Edge {
 };
 
 /**
+ * A Class which stores information for a horizontal line segment which can act
+ * as an edge of a rectangle
+ */
+class HorizontalEdge {
+  public:
+    /// The vertical interval in which the segment lies
+    XInterval x_interval;
+    /// The x coordinate at which the segment lies
+    long double y_coordinate;
+    EdgeType edge_type;
+    /**
+     * Constructor. Initialize the information to the passed parameters
+     *
+     * @param y_interval vertical interval of the segment
+     * @param x_coordinate x coordinate of the segment
+     */
+    HorizontalEdge(XInterval x_interval, long double y_coordinate,
+                   EdgeType edge_type);
+
+    /**
+     * Default Constructor
+     */
+    HorizontalEdge();
+};
+
+/**
  * A Rectangle class
  */
 class Rectangle {

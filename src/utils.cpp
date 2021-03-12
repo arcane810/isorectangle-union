@@ -27,6 +27,10 @@ YInterval::YInterval() : bottom(0), top(0) {}
 Edge::Edge(YInterval y_interval, long double x_coordinate, EdgeType edge_type)
     : y_interval(y_interval), x_coordinate(x_coordinate), edge_type(edge_type) {
 }
+HorizontalEdge::HorizontalEdge(XInterval x_interval, long double y_coordinate,
+                               EdgeType edge_type)
+    : x_interval(x_interval), y_coordinate(y_coordinate), edge_type(edge_type) {
+}
 
 Edge::Edge() : y_interval(YInterval()), x_coordinate(0) {}
 
