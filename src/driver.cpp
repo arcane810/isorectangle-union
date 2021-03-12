@@ -1,4 +1,4 @@
-#include "contours.hpp"
+#include "measure.hpp"
 #include <fstream>
 #include <iostream>
 
@@ -12,7 +12,7 @@ int main() {
         fin >> a >> b >> c >> d;
         rectangles.push_back(Rectangle(XInterval(a, b), YInterval(c, d)));
     }
-    getContours(rectangles);
+    std::cout << getMeasure(rectangles) << "\n";
 
     return 0;
 }

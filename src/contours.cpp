@@ -23,14 +23,6 @@ std::vector<ContourStripes> copy_stripes(std::vector<ContourStripes> &s,
             i++;
         }
     }
-    // std::cout << "REACHED I: " << i << "\n";
-    // for (auto i : s)
-    //     std::cout << i.y_interval.top << "\n";
-    // std::cout << "\n;;;;;;;;;\n";
-    // for (auto i : P)
-    //     std::cout << i << "\n";
-    // std::cout << "COPYBEFORESZ: " << s.size()
-    //           << " COPYAFTERSZ: " << s_copy.size() << "\n";
     return s_copy;
 }
 
