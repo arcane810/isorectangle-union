@@ -190,13 +190,30 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
         }
 
         // P Union
-        std::set<long double> P_set;
-        for (long double i : P_left)
-            P_set.insert(i);
-        for (long double i : P_right)
-            P_set.insert(i);
-        for (long double i : P_set)
-            P.push_back(i);
+        int i1 = 0, i2 = 0;
+        while (i1 < P_left.size() || i2 < P_right.size()) {
+            if (i1 >= P_left.size()) {
+                if (P.size() == 0 || P_right[i2] != P.back()) {
+                    P.push_back(P_right[i2]);
+                }
+                i2++;
+            } else if (i2 >= P_right.size()) {
+                if (P.size() == 0 || P_left[i1] != P.back()) {
+                    P.push_back(P_left[i1]);
+                }
+                i1++;
+            } else if (P_left[i1] < P_right[i2]) {
+                if (P.size() == 0 || P_left[i1] != P.back()) {
+                    P.push_back(P_left[i1]);
+                }
+                i1++;
+            } else {
+                if (P.size() == 0 || P_right[i2] != P.back()) {
+                    P.push_back(P_right[i2]);
+                }
+                i2++;
+            }
+        }
 
         std::vector<MeasureStripes> s_left2 =
             copy_stripes(s_left, P, XInterval(x_ext.left, div));
@@ -236,7 +253,7 @@ long double getMeasure(std::vector<Rectangle> rectangles) {
     }
     auto cmp = [](std::pair<Edge, int> e1, std::pair<Edge, int> e2) {
         if (e1.first.x_coordinate == e2.first.x_coordinate) {
-            if (e1.first.edge_type == LEFT) {
+            if (e1.first.edge_type == LEFT && e2.first.edge_type == RIGHT) {
                 return true;
             } else {
                 return false;

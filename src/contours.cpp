@@ -60,7 +60,7 @@ std::vector<ContourStripes> concatenate(std::vector<ContourStripes> &s_left,
         if (s_left[i].x_union) {
             if (s_right[i].x_union) {
                 new_x_union =
-                    new UnionTree(s_left[i].x_interval.left, UNDEF,
+                    new UnionTree(s_left[i].x_interval.right, UNDEF,
                                   s_left[i].x_union, s_right[i].x_union);
             } else {
                 new_x_union = s_left[i].x_union;
@@ -177,13 +177,30 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
         }
 
         // P Union
-        std::set<long double> P_set;
-        for (long double i : P_left)
-            P_set.insert(i);
-        for (long double i : P_right)
-            P_set.insert(i);
-        for (long double i : P_set)
-            P.push_back(i);
+        int i1 = 0, i2 = 0;
+        while (i1 < P_left.size() || i2 < P_right.size()) {
+            if (i1 >= P_left.size()) {
+                if (P.size() == 0 || P_right[i2] != P.back()) {
+                    P.push_back(P_right[i2]);
+                }
+                i2++;
+            } else if (i2 >= P_right.size()) {
+                if (P.size() == 0 || P_left[i1] != P.back()) {
+                    P.push_back(P_left[i1]);
+                }
+                i1++;
+            } else if (P_left[i1] < P_right[i2]) {
+                if (P.size() == 0 || P_left[i1] != P.back()) {
+                    P.push_back(P_left[i1]);
+                }
+                i1++;
+            } else {
+                if (P.size() == 0 || P_right[i2] != P.back()) {
+                    P.push_back(P_right[i2]);
+                }
+                i2++;
+            }
+        }
 
         std::vector<ContourStripes> s_left2 =
             copy_stripes(s_left, P, XInterval(x_ext.left, div));
@@ -208,6 +225,19 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
     }
 }
 
+void dfs(UnionTree *ut, int l, int r,
+         std::vector<std::pair<long double, NodeEdgeType>> &occ) {
+    if (!ut)
+        return;
+    if (ut->node_edge_type != UNDEF) {
+        occ.push_back({ut->coord, ut->node_edge_type});
+    }
+    if (ut->coord >= l)
+        dfs(ut->left, l, r, occ);
+    if (ut->coord <= r)
+        dfs(ut->right, l, r, occ);
+}
+
 // std::vector<std::pair<Point, Point>>
 // contour_pieces(HorizontalEdge h, std::vector<ContourStripes> s) {}
 
@@ -227,7 +257,7 @@ getContours(std::vector<Rectangle> rectangles) {
     }
     auto cmp = [](std::pair<Edge, int> e1, std::pair<Edge, int> e2) {
         if (e1.first.x_coordinate == e2.first.x_coordinate) {
-            if (e1.first.edge_type == LEFT) {
+            if (e1.first.edge_type == LEFT && e2.first.edge_type == RIGHT) {
                 return true;
             } else {
                 return false;
@@ -259,6 +289,8 @@ getContours(std::vector<Rectangle> rectangles) {
     sort(horizontal_edges.begin(), horizontal_edges.end(), cmp2);
     int i1 = 0;
     int i2 = 0;
+
+    std::vector<std::pair<Point, Point>> ed;
     for (HorizontalEdge h : horizontal_edges) {
         int seli = 0;
         if (h.edge_type == BOTTOM) {
@@ -273,8 +305,29 @@ getContours(std::vector<Rectangle> rectangles) {
             seli = i2;
         }
         long double x_l = h.x_interval.left;
+        long double x_r = h.x_interval.right;
+        std::vector<std::pair<long double, NodeEdgeType>> occ;
+        dfs(s[seli].x_union, x_l, x_r, occ);
+        long double p = x_l;
+        bool f = 1;
+        for (auto it : occ) {
+            if (h.y_coordinate == 6)
+                std::cout << it.second << ":" << it.first << "\n";
+            if (it.second == LEFT_U) {
+                f = 0;
+                if (p < it.first)
+                    ed.push_back({Point(p, h.y_coordinate),
+                                  Point(it.first, h.y_coordinate)});
+            } else if (it.first >= p) {
+                f = 1;
+                p = it.first;
+            }
+        }
+        if (p < x_r && f) {
+            ed.push_back(
+                {Point(p, h.y_coordinate), Point(x_r, h.y_coordinate)});
+        }
     }
 
-    std::vector<std::pair<Point, Point>> ed;
     return ed;
 }
