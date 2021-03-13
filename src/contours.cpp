@@ -238,9 +238,6 @@ void dfs(UnionTree *ut, int l, int r,
         dfs(ut->right, l, r, occ);
 }
 
-// std::vector<std::pair<Point, Point>>
-// contour_pieces(HorizontalEdge h, std::vector<ContourStripes> s) {}
-
 std::vector<std::pair<Point, Point>>
 getContours(std::vector<Rectangle> rectangles) {
     std::vector<std::pair<YInterval, int>> L;
@@ -311,13 +308,13 @@ getContours(std::vector<Rectangle> rectangles) {
         long double p = x_l;
         bool f = 1;
         for (auto it : occ) {
-            if (h.y_coordinate == 6)
-                std::cout << it.second << ":" << it.first << "\n";
             if (it.second == LEFT_U) {
                 f = 0;
-                if (p < it.first)
-                    ed.push_back({Point(p, h.y_coordinate),
-                                  Point(it.first, h.y_coordinate)});
+                if (p < it.first) {
+                    ed.push_back(
+                        {Point(p, h.y_coordinate),
+                         Point(std::min(it.first, x_r), h.y_coordinate)});
+                }
             } else if (it.first >= p) {
                 f = 1;
                 p = it.first;
@@ -327,6 +324,19 @@ getContours(std::vector<Rectangle> rectangles) {
             ed.push_back(
                 {Point(p, h.y_coordinate), Point(x_r, h.y_coordinate)});
         }
+    }
+    std::vector<Point> pts;
+    auto cmp3 = [](Point p1, Point p2) {
+        if (p1.x == p2.x) {
+            return p1.y < p2.y;
+        }
+        return p1.x < p2.x;
+    };
+    sort(pts.begin(), pts.end(), cmp3);
+    for (int i = 0; i < pts.size(); i += 2) {
+        std::cout << pts[i].x << " " << pts[i].y << "\t" << pts[i + 1].x << " "
+                  << pts[i + 1].y << "\n";
+        ed.push_back({pts[i], pts[i + 1]});
     }
 
     return ed;

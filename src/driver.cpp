@@ -9,12 +9,13 @@ int main() {
     int n;
     std::cin >> n;
     for (int i = 0; i < n; i++) {
-        int a, b, c, d;
+        long double a, b, c, d;
         std::cin >> a >> b >> c >> d;
         rectangles.push_back(Rectangle(XInterval(a, b), YInterval(c, d)));
     }
-    std::cout << getMeasure(rectangles) << "\n";
+    // std::cout << getMeasure(rectangles) << "\n";
     std::vector<std::pair<Point, Point>> hcontours = getContours(rectangles);
+    std::cout << hcontours.size() << "\n";
     for (auto it : hcontours) {
         std::cout << it.first.x << " " << it.first.y << " " << it.second.x
                   << " " << it.second.y << "\n";
