@@ -325,7 +325,61 @@ getContours(std::vector<Rectangle> rectangles) {
                 {Point(p, h.y_coordinate), Point(x_r, h.y_coordinate)});
         }
     }
+    //delete fully contained intervals.
+    auto cmped = [](std::pair<Point, Point>p1, std::pair<Point, Point>p2) {
+    	/* Sort by y
+    	   If x is same, take shorter one first.
+    	   else
+    	   take leftmost.
+    	*/
+        if(p1.first.y == p2.first.y) { // same y,  compare first point of pairs' x, compare y
+            if(p1.first.x == p2.first.x)
+            {
+            	return p1.second.x < p2.second.x;
+            }
+            else 
+            	return p1.first.x < p2.first.x;
+        }
+        return p1.first.y < p2.first.y;
+    };
+    sort(ed.begin(), ed.end(), cmped);
+    std::vector<std::pair<Point, Point>>new_ed;
+    // Sweep-line
+    long double prev_y = ed[0].first.y + 1, maxr = 0, currl = 0;
+
+    for(int i = 0; i < ed.size(); i++)
+    {
+    	if(ed[i].first.y == prev_y)
+    	{
+    		if(ed[i].first.x > maxr)
+    		{
+    			if(maxr != currl)
+    			{	
+    				new_ed.push_back({Point(currl, prev_y), Point(maxr, prev_y)});
+    			}
+    		}
+    		else
+    		{
+    			maxr = std::max(ed[i].second.x, maxr);
+    		}
+    	}
+    	else
+    	{
+    		if(maxr != currl)
+    		{
+    			new_ed.push_back({Point(currl, prev_y), Point(maxr, prev_y)});
+    		}
+    		maxr = ed[i].second.x;
+    		currl = ed[i].first.x;
+    		prev_y = ed[i].first.y;
+    	}
+    }
     std::vector<Point> pts;
+    for(auto it: new_ed)
+    {
+    	pts.push_back(new_ed.first);
+    	pts.push_back(new_ed.second);
+    }
     auto cmp3 = [](Point p1, Point p2) {
         if (p1.x == p2.x) {
             return p1.y < p2.y;
@@ -336,8 +390,8 @@ getContours(std::vector<Rectangle> rectangles) {
     for (int i = 0; i < pts.size(); i += 2) {
         std::cout << pts[i].x << " " << pts[i].y << "\t" << pts[i + 1].x << " "
                   << pts[i + 1].y << "\n";
-        ed.push_back({pts[i], pts[i + 1]});
+        new_ed.push_back({pts[i], pts[i + 1]});
     }
 
-    return ed;
+    return new_ed;
 }
