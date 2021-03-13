@@ -1,6 +1,10 @@
 import matplotlib.pyplot as plt
+import sys
 
-with open("test1.in") as f:
+ifile = sys.argv[1]
+ofile = ifile + ".out"
+
+with open(ifile) as f:
     n = int(f.readline())
     for i in range(n):
         x1, x2, y1, y2 = map(float, f.readline().split())
@@ -16,9 +20,12 @@ with open("test1.in") as f:
         y.append(y2)
         y.append(y1)
         y.append(y1)
-        plt.plot(x, y, color="red")
+        plt.plot(x, y, color="black")
 
-with open("test1.out") as f:
+with open(ofile) as f:
+    measure = float(f.readline())
+    s = "Measure: " + str(measure)
+    plt.suptitle(s)
     n = int(f.readline())
     for i in range(n):
         x1, y1, x2, y2 = map(float, f.readline().split())
@@ -28,6 +35,5 @@ with open("test1.out") as f:
         y.append(y1)
         x.append(x2)
         y.append(y2)
-        plt.plot(x, y, color="green")
-
+        plt.plot(x, y, color="yellow")
 plt.show()

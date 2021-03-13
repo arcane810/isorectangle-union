@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <float.h>
 #include <iostream>
-#include <map>
 #include <set>
+#include <unordered_map>
 
 UnionTree::UnionTree(long double coord, NodeEdgeType node_edge_type,
                      UnionTree *left, UnionTree *right)
@@ -15,6 +15,13 @@ ContourStripes::ContourStripes(XInterval x_interval, YInterval y_interval,
                                UnionTree *x_union)
     : x_interval(x_interval), y_interval(y_interval), x_union(x_union) {}
 
+/**
+ * Copies the stripe and split into partitions as per P
+ * @param s set of stripes
+ * @param P set of partition borders
+ * @param x_int x interval of the strip
+ * @return set of new strips
+ */
 std::vector<ContourStripes> copy_stripes(std::vector<ContourStripes> &s,
                                          std::vector<long double> &P,
                                          XInterval x_int) {
@@ -30,6 +37,12 @@ std::vector<ContourStripes> copy_stripes(std::vector<ContourStripes> &s,
     return s_copy;
 }
 
+/**
+ * Adds the entire interval to x_union for unmerged edges tha cross entire
+ * interval
+ * @param s set of stripes
+ * @param J set of y ptojection of edges
+ */
 void blacken(std::vector<ContourStripes> &s,
              std::vector<std::pair<YInterval, int>> &J) {
     int i = 0;
@@ -49,6 +62,15 @@ void blacken(std::vector<ContourStripes> &s,
         }
     }
 }
+
+/**
+ * Concatenates the left and right strips after they are copied and blackened
+ * @param s_left set of stripes of left part
+ * @param s_right set of stripes of right part
+ * @param P set of partition borders
+ * @param x_ext the x interval of the combined stripes
+ * @return set of concatenated strips
+ */
 std::vector<ContourStripes> concatenate(std::vector<ContourStripes> &s_left,
                                         std::vector<ContourStripes> &s_right,
                                         std::vector<long double> &P,
@@ -77,7 +99,19 @@ std::vector<ContourStripes> concatenate(std::vector<ContourStripes> &s_left,
     return s;
 }
 
-void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
+/**
+ * Recursive divide and conquer call to get the set of stripes
+ * @param edges set of vertical edges of the rectangle in the interval x_ext
+ * @param x_ext the x interval
+ * @param L set of y projections of unmerged left edges to which the merged left
+ * edges are added
+ * @param R set of y projections of unmerged right edges to which the merged
+ * right edges are added
+ * @param P set of partition borders to which new partition borders are to be
+ * added
+ * @param s set of stripes to which stripes are to be added
+ */
+void stripes(std::vector<std::pair<Edge, int>> &edges, XInterval x_ext,
              std::vector<std::pair<YInterval, int>> &L,
              std::vector<std::pair<YInterval, int>> &R,
              std::vector<long double> &P, std::vector<ContourStripes> &s) {
@@ -132,7 +166,7 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
                 P_right, s_right);
 
         // Merge
-        std::map<int, int> cnt;
+        std::unordered_map<int, int> cnt;
         for (auto it : L_left) {
             cnt[it.second]++;
         }
@@ -225,6 +259,13 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
     }
 }
 
+/**
+ * A depth first search to find the intervals in the range [l,r]
+ * @param ut The BST to be searched
+ * @param l The left limit of search range
+ * @param r The right limit of search range
+ * @param occ The vector to which answer is pushed
+ */
 void dfs(UnionTree *ut, int l, int r,
          std::vector<std::pair<long double, NodeEdgeType>> &occ) {
     if (!ut)
@@ -239,7 +280,7 @@ void dfs(UnionTree *ut, int l, int r,
 }
 
 std::vector<std::pair<Point, Point>>
-getContours(std::vector<Rectangle> rectangles) {
+getContours(std::vector<Rectangle> &rectangles) {
     std::vector<std::pair<YInterval, int>> L;
     std::vector<std::pair<YInterval, int>> R;
     std::vector<long double> P;
@@ -252,7 +293,7 @@ getContours(std::vector<Rectangle> rectangles) {
         edges.push_back(
             {Edge(rectangle.y_interval, rectangle.x_interval.right, RIGHT), i});
     }
-    auto cmp = [](std::pair<Edge, int> e1, std::pair<Edge, int> e2) {
+    auto cmp = [](std::pair<Edge, int> &e1, std::pair<Edge, int> &e2) {
         if (e1.first.x_coordinate == e2.first.x_coordinate) {
             if (e1.first.edge_type == LEFT && e2.first.edge_type == RIGHT) {
                 return true;
@@ -265,6 +306,8 @@ getContours(std::vector<Rectangle> rectangles) {
     };
     std::sort(edges.begin(), edges.end(), cmp);
     stripes(edges, XInterval(-LDBL_MAX, LDBL_MAX), L, R, P, s);
+
+    // Get sorted horizontal edges of rectangles to query for contour pieces
     std::vector<HorizontalEdge> horizontal_edges;
     for (Rectangle rectangle : rectangles) {
         horizontal_edges.push_back(HorizontalEdge(
@@ -272,7 +315,7 @@ getContours(std::vector<Rectangle> rectangles) {
         horizontal_edges.push_back(HorizontalEdge(
             rectangle.x_interval, rectangle.y_interval.bottom, BOTTOM));
     }
-    auto cmp2 = [](HorizontalEdge e1, HorizontalEdge e2) {
+    auto cmp2 = [](HorizontalEdge &e1, HorizontalEdge &e2) {
         if (e1.y_coordinate == e2.y_coordinate) {
             if (e1.edge_type == BOTTOM) {
                 return true;
@@ -288,6 +331,8 @@ getContours(std::vector<Rectangle> rectangles) {
     int i2 = 0;
 
     std::vector<std::pair<Point, Point>> ed;
+
+    // querying contour pieces for each edge, use 2 pointer on stripes, edges
     for (HorizontalEdge h : horizontal_edges) {
         int seli = 0;
         if (h.edge_type == BOTTOM) {
@@ -304,6 +349,8 @@ getContours(std::vector<Rectangle> rectangles) {
         long double x_l = h.x_interval.left;
         long double x_r = h.x_interval.right;
         std::vector<std::pair<long double, NodeEdgeType>> occ;
+
+        // dfs on the interval of the edge
         dfs(s[seli].x_union, x_l, x_r, occ);
         long double p = x_l;
         bool f = 1;
@@ -325,71 +372,63 @@ getContours(std::vector<Rectangle> rectangles) {
                 {Point(p, h.y_coordinate), Point(x_r, h.y_coordinate)});
         }
     }
-    //delete fully contained intervals.
-    auto cmped = [](std::pair<Point, Point>p1, std::pair<Point, Point>p2) {
-    	/* Sort by y
-    	   If x is same, take shorter one first.
-    	   else
-    	   take leftmost.
-    	*/
-        if(p1.first.y == p2.first.y) { // same y,  compare first point of pairs' x, compare y
-            if(p1.first.x == p2.first.x)
-            {
-            	return p1.second.x < p2.second.x;
-            }
-            else 
-            	return p1.first.x < p2.first.x;
+
+    // Sort by y coordinate and then by x coordinate of left point and then by x
+    // coordinate of right point
+    auto cmped = [](std::pair<Point, Point> &p1, std::pair<Point, Point> &p2) {
+        if (p1.first.y == p2.first.y) {
+            if (p1.first.x == p2.first.x) {
+                return p1.second.x < p2.second.x;
+            } else
+                return p1.first.x < p2.first.x;
         }
         return p1.first.y < p2.first.y;
     };
     sort(ed.begin(), ed.end(), cmped);
-    std::vector<std::pair<Point, Point>>new_ed;
-    // Sweep-line
-    long double prev_y = ed[0].first.y + 1, maxr = 0, currl = 0;
+    std::vector<std::pair<Point, Point>> new_ed;
 
-    for(int i = 0; i < ed.size(); i++)
-    {
-    	if(ed[i].first.y == prev_y)
-    	{
-    		if(ed[i].first.x > maxr)
-    		{
-    			if(maxr != currl)
-    			{	
-    				new_ed.push_back({Point(currl, prev_y), Point(maxr, prev_y)});
-    			}
-    		}
-    		else
-    		{
-    			maxr = std::max(ed[i].second.x, maxr);
-    		}
-    	}
-    	else
-    	{
-    		if(maxr != currl)
-    		{
-    			new_ed.push_back({Point(currl, prev_y), Point(maxr, prev_y)});
-    		}
-    		maxr = ed[i].second.x;
-    		currl = ed[i].first.x;
-    		prev_y = ed[i].first.y;
-    	}
+    // Sweepline to merge overlapping intervals
+    long double prev_y = ed[0].first.y + 1, maxr = 0, currl = 0;
+    for (int i = 0; i < ed.size(); i++) {
+        if (ed[i].first.y == prev_y) {
+            if (ed[i].first.x > maxr) {
+                if (maxr != currl) {
+                    new_ed.push_back(
+                        {Point(currl, prev_y), Point(maxr, prev_y)});
+                }
+                maxr = ed[i].second.x;
+                currl = ed[i].first.x;
+            } else {
+                maxr = std::max(ed[i].second.x, maxr);
+            }
+        } else {
+            if (maxr != currl) {
+                new_ed.push_back({Point(currl, prev_y), Point(maxr, prev_y)});
+            }
+            maxr = ed[i].second.x;
+            currl = ed[i].first.x;
+            prev_y = ed[i].first.y;
+        }
     }
+    if (maxr != currl) {
+        new_ed.push_back({Point(currl, prev_y), Point(maxr, prev_y)});
+    }
+
+    // Add vertical contour edges
     std::vector<Point> pts;
-    for(auto it: new_ed)
-    {
-    	pts.push_back(new_ed.first);
-    	pts.push_back(new_ed.second);
+    for (auto it : new_ed) {
+        pts.push_back(it.first);
+        pts.push_back(it.second);
     }
-    auto cmp3 = [](Point p1, Point p2) {
+    auto cmp3 = [](Point &p1, Point &p2) {
         if (p1.x == p2.x) {
             return p1.y < p2.y;
         }
         return p1.x < p2.x;
     };
     sort(pts.begin(), pts.end(), cmp3);
+
     for (int i = 0; i < pts.size(); i += 2) {
-        std::cout << pts[i].x << " " << pts[i].y << "\t" << pts[i + 1].x << " "
-                  << pts[i + 1].y << "\n";
         new_ed.push_back({pts[i], pts[i + 1]});
     }
 

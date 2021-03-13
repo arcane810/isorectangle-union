@@ -6,8 +6,14 @@
 #include <utility>
 #include <vector>
 
+/**
+ * An enum to denote the edge type of values in BST
+ */
 enum NodeEdgeType { LEFT_U, RIGHT_U, UNDEF };
 
+/**
+ * BST for storing x_union of stripes
+ */
 class UnionTree {
   public:
     long double coord;
@@ -18,12 +24,25 @@ class UnionTree {
               UnionTree *right);
 };
 
+/**
+ * A class so store the stripes for contours
+ */
 class ContourStripes {
   public:
+    /// The x interval of the stripe
     XInterval x_interval;
+    /// The y interval of the stripe
     YInterval y_interval;
+    /// the BST for x_union
     UnionTree *x_union;
 
+    /**
+     * Constructor.
+     *
+     * @param x_interval The x interval of the stripe
+     * @param y_interval The y interval of the stripe
+     * @param x_union The BST for x_union
+     */
     ContourStripes(XInterval x_interval, YInterval y_interval,
                    UnionTree *x_union);
 };
@@ -34,4 +53,4 @@ class ContourStripes {
  * segment
  */
 std::vector<std::pair<Point, Point>>
-getContours(std::vector<Rectangle> rectangles);
+getContours(std::vector<Rectangle> &rectangles);

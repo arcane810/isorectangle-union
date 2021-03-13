@@ -4,8 +4,8 @@
 #include <algorithm>
 #include <float.h>
 #include <iostream>
-#include <map>
 #include <set>
+#include <unordered_map>
 
 MeasureStripes::MeasureStripes(XInterval x_interval, YInterval y_interval,
                                long double x_union)
@@ -93,7 +93,7 @@ std::vector<MeasureStripes> concatenate(std::vector<MeasureStripes> &s_left,
  * added
  * @param s set of stripes to which stripes are to be added
  */
-void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
+void stripes(std::vector<std::pair<Edge, int>> &edges, XInterval x_ext,
              std::vector<std::pair<YInterval, int>> &L,
              std::vector<std::pair<YInterval, int>> &R,
              std::vector<long double> &P, std::vector<MeasureStripes> &s) {
@@ -145,7 +145,7 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
                 P_right, s_right);
 
         // Merge
-        std::map<int, int> cnt;
+        std::unordered_map<int, int> cnt;
         for (auto it : L_left) {
             cnt[it.second]++;
         }
@@ -238,7 +238,7 @@ void stripes(std::vector<std::pair<Edge, int>> edges, XInterval x_ext,
     }
 }
 
-long double getMeasure(std::vector<Rectangle> rectangles) {
+long double getMeasure(std::vector<Rectangle> &rectangles) {
     std::vector<std::pair<YInterval, int>> L;
     std::vector<std::pair<YInterval, int>> R;
     std::vector<long double> P;
@@ -251,7 +251,7 @@ long double getMeasure(std::vector<Rectangle> rectangles) {
         edges.push_back(
             {Edge(rectangle.y_interval, rectangle.x_interval.right, RIGHT), i});
     }
-    auto cmp = [](std::pair<Edge, int> e1, std::pair<Edge, int> e2) {
+    auto cmp = [](std::pair<Edge, int> &e1, std::pair<Edge, int> &e2) {
         if (e1.first.x_coordinate == e2.first.x_coordinate) {
             if (e1.first.edge_type == LEFT && e2.first.edge_type == RIGHT) {
                 return true;
