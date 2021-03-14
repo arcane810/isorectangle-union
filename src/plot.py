@@ -35,5 +35,5 @@ with open(ofile) as f:
         y.append(y1)
         x.append(x2)
         y.append(y2)
-        plt.plot(x, y, color="yellow")
+        plt.plot(x, y, color="cyan")
 plt.show()

@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['stripes_22',['stripes',['../contours_8cpp.html#a0d82f1aba63ec1fb3a3dbdf89e61d56c',1,'stripes(std::vector&lt; std::pair&lt; Edge, int &gt;&gt; &amp;edges, XInterval x_ext, std::vector&lt; std::pair&lt; YInterval, int &gt;&gt; &amp;L, std::vector&lt; std::pair&lt; YInterval, int &gt;&gt; &amp;R, std::vector&lt; long double &gt; &amp;P, std::vector&lt; ContourStripes &gt; &amp;s):&#160;contours.cpp'],['../measure_8cpp.html#ad0a4c7ea26961dad87cb204706da300c',1,'stripes(std::vector&lt; std::pair&lt; Edge, int &gt;&gt; &amp;edges, XInterval x_ext, std::vector&lt; std::pair&lt; YInterval, int &gt;&gt; &amp;L, std::vector&lt; std::pair&lt; YInterval, int &gt;&gt; &amp;R, std::vector&lt; long double &gt; &amp;P, std::vector&lt; MeasureStripes &gt; &amp;s):&#160;measure.cpp']]]
+];

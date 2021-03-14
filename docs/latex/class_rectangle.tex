@@ -1,0 +1,85 @@
+\hypertarget{class_rectangle}{}\doxysection{Rectangle Class Reference}
+\label{class_rectangle}\index{Rectangle@{Rectangle}}
+
+
+{\ttfamily \#include $<$utils.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{class_rectangle_a66ce5c76173ade8e14640a07d485c8f6}{Rectangle}} (\mbox{\hyperlink{class_x_interval}{XInterval}} \mbox{\hyperlink{class_rectangle_ae5a14a7bfaa817483c7fc87da3649157}{x\+\_\+interval}}, \mbox{\hyperlink{class_y_interval}{YInterval}} \mbox{\hyperlink{class_rectangle_af33e1dd695568c868c972a751f8b799f}{y\+\_\+interval}})
+\item 
+\mbox{\hyperlink{class_rectangle_a04b967466c92ca0ec425b3a0bc8d4242}{Rectangle}} (long double x\+\_\+left, long double x\+\_\+right, long double y\+\_\+bottom, long double y\+\_\+top)
+\item 
+\mbox{\hyperlink{class_rectangle_aee72665744d66a1cc045b97c0c7b60aa}{Rectangle}} (\mbox{\hyperlink{class_point}{Point}} p1, \mbox{\hyperlink{class_point}{Point}} p2)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_rectangle_ae5a14a7bfaa817483c7fc87da3649157}\label{class_rectangle_ae5a14a7bfaa817483c7fc87da3649157}} 
+\mbox{\hyperlink{class_x_interval}{XInterval}} \mbox{\hyperlink{class_rectangle_ae5a14a7bfaa817483c7fc87da3649157}{x\+\_\+interval}}
+\begin{DoxyCompactList}\small\item\em The left and right limits of the rectangle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{class_rectangle_af33e1dd695568c868c972a751f8b799f}\label{class_rectangle_af33e1dd695568c868c972a751f8b799f}} 
+\mbox{\hyperlink{class_y_interval}{YInterval}} \mbox{\hyperlink{class_rectangle_af33e1dd695568c868c972a751f8b799f}{y\+\_\+interval}}
+\begin{DoxyCompactList}\small\item\em The bottom and top limits of the rectangle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+A \mbox{\hyperlink{class_rectangle}{Rectangle}} class 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_rectangle_a66ce5c76173ade8e14640a07d485c8f6}\label{class_rectangle_a66ce5c76173ade8e14640a07d485c8f6}} 
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{Rectangle()}{Rectangle()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily Rectangle\+::\+Rectangle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_x_interval}{XInterval}}}]{x\+\_\+interval,  }\item[{\mbox{\hyperlink{class_y_interval}{YInterval}}}]{y\+\_\+interval }\end{DoxyParamCaption})}
+
+Constructor. Initialize the limits with intervals as input
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+interval} & horizontal limits of the rectangle \\
+\hline
+{\em y\+\_\+interval} & vertical limits of the rectangle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_a04b967466c92ca0ec425b3a0bc8d4242}\label{class_rectangle_a04b967466c92ca0ec425b3a0bc8d4242}} 
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{Rectangle()}{Rectangle()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily Rectangle\+::\+Rectangle (\begin{DoxyParamCaption}\item[{long double}]{x\+\_\+left,  }\item[{long double}]{x\+\_\+right,  }\item[{long double}]{y\+\_\+bottom,  }\item[{long double}]{y\+\_\+top }\end{DoxyParamCaption})}
+
+Constructor. Initialize the limits with coordinates
+
+
+\begin{DoxyParams}{Parameters}
+{\em x\+\_\+left} & left limit of the rectangle \\
+\hline
+{\em x\+\_\+right} & right limit of the rectangle \\
+\hline
+{\em y\+\_\+bototm} & bottom limit of the rectangle \\
+\hline
+{\em y\+\_\+top} & top limit of the rectangle \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{class_rectangle_aee72665744d66a1cc045b97c0c7b60aa}\label{class_rectangle_aee72665744d66a1cc045b97c0c7b60aa}} 
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\index{Rectangle@{Rectangle}!Rectangle@{Rectangle}}
+\doxysubsubsection{\texorpdfstring{Rectangle()}{Rectangle()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily Rectangle\+::\+Rectangle (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{class_point}{Point}}}]{p1,  }\item[{\mbox{\hyperlink{class_point}{Point}}}]{p2 }\end{DoxyParamCaption})}
+
+Constructor. Initialize the limits with 2 opposite vertices as input
+
+
+\begin{DoxyParams}{Parameters}
+{\em p1} & A vertex of the rectangle \\
+\hline
+{\em p2} & Another vertex opposite to p1 \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{utils_8hpp}{utils.\+hpp}}\item 
+src/\mbox{\hyperlink{utils_8cpp}{utils.\+cpp}}\end{DoxyCompactItemize}

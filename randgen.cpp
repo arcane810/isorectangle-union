@@ -16,25 +16,59 @@ int32_t main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n = 20000;
+    int n = 1000000;
 
-    int m = 1000;
+    int m = 800000;
 
     cout << n << "\n";
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n / 5; i++) {
         int x1, x2, y1, y2;
-        x1 = rng() % m;
-        x2 = rng() % m;
-        y1 = rng() % m;
-        y2 = rng() % m;
-        if (x1 > x2) {
-            swap(x1, x2);
-        }
-        if (y1 > y2) {
-            swap(y1, y2);
-        }
-        cout << rng() % m << " " << rng() % m << " " << rng() % m << " "
-             << rng() % m << "\n";
+        x1 = rng() % (m / 2);
+        x2 = rng() % (m / 2);
+        y1 = rng() % (m / 2);
+        y2 = rng() % (m / 4);
+        cout << x1 << " " << x1 + x2 + 1 << " " << y1 << " " << y1 + y2 + 1
+             << "\n";
+    }
+
+    for (int i = 0; i < n / 5; i++) {
+        int x1, x2, y1, y2;
+        x1 = m + 1000 + rng() % (m / 2);
+        x2 = rng() % (m / 4);
+        y1 = rng() % (m / 2);
+        y2 = rng() % (m / 2);
+        cout << x1 << " " << x1 + x2 + 1 << " " << y1 << " " << y1 + y2 + 1
+             << "\n";
+    }
+
+    for (int i = 0; i < n / 5; i++) {
+        int x1, x2, y1, y2;
+        x1 = rng() % (m / 2);
+        x2 = rng() % (m / 2);
+        y1 = m + rng() % (m / 2);
+        y2 = rng() % (m / 2);
+        cout << x1 << " " << x1 + x2 + 1 << " " << y1 << " " << y1 + y2 + 1
+             << "\n";
+    }
+
+    for (int i = 0; i < n / 5; i++) {
+        int x1, x2, y1, y2;
+        x1 = m + 1000 + rng() % (m / 4);
+        x2 = rng() % (m / 2);
+        y1 = m + rng() % (m / 2);
+        y2 = rng() % (m / 2);
+        cout << x1 << " " << x1 + x2 + 1 << " " << y1 << " " << y1 + y2 + 1
+             << "\n";
+    }
+
+    for (int i = 0; i < n / 5; i++) {
+        int x1, x2, y1, y2;
+        x1 = m / 2 + rng() % (m / 2);
+        x2 = rng() % (m / 4);
+        y1 = m / 2 + rng() % (m / 4);
+        y2 = rng() % (m / 2);
+        cout << x1 << " " << x1 + x2 + 1 << " " << y1 << " " << y1 + y2 + 1
+             << "\n";
     }
 
     return 0;

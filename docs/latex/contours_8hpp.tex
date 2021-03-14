@@ -1,0 +1,46 @@
+\hypertarget{contours_8hpp}{}\doxysection{src/contours.hpp File Reference}
+\label{contours_8hpp}\index{src/contours.hpp@{src/contours.hpp}}
+{\ttfamily \#include \char`\"{}utils.\+hpp\char`\"{}}\newline
+{\ttfamily \#include $<$utility$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{class_union_tree}{Union\+Tree}}
+\item 
+class \mbox{\hyperlink{class_contour_stripes}{Contour\+Stripes}}
+\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{contours_8hpp_a36462f75de6f8e2228194ec5b5f41721}{Node\+Edge\+Type}} \{ {\bfseries LEFT\+\_\+U}
+, {\bfseries RIGHT\+\_\+U}
+, {\bfseries UNDEF}
+ \}
+\end{DoxyCompactItemize}
+\doxysubsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+std\+::vector$<$ std\+::pair$<$ \mbox{\hyperlink{class_point}{Point}}, \mbox{\hyperlink{class_point}{Point}} $>$ $>$ \mbox{\hyperlink{contours_8hpp_af899c7e78877507309e029b5077d721c}{get\+Contours}} (std\+::vector$<$ \mbox{\hyperlink{class_rectangle}{Rectangle}} $>$ \&rectangles)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{contours_8hpp_a36462f75de6f8e2228194ec5b5f41721}\label{contours_8hpp_a36462f75de6f8e2228194ec5b5f41721}} 
+\index{contours.hpp@{contours.hpp}!NodeEdgeType@{NodeEdgeType}}
+\index{NodeEdgeType@{NodeEdgeType}!contours.hpp@{contours.hpp}}
+\doxysubsubsection{\texorpdfstring{NodeEdgeType}{NodeEdgeType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{contours_8hpp_a36462f75de6f8e2228194ec5b5f41721}{Node\+Edge\+Type}}}
+
+An enum to denote the edge type of values in BST 
+
+\doxysubsection{Function Documentation}
+\mbox{\Hypertarget{contours_8hpp_af899c7e78877507309e029b5077d721c}\label{contours_8hpp_af899c7e78877507309e029b5077d721c}} 
+\index{contours.hpp@{contours.hpp}!getContours@{getContours}}
+\index{getContours@{getContours}!contours.hpp@{contours.hpp}}
+\doxysubsubsection{\texorpdfstring{getContours()}{getContours()}}
+{\footnotesize\ttfamily std\+::vector$<$std\+::pair$<$\mbox{\hyperlink{class_point}{Point}}, \mbox{\hyperlink{class_point}{Point}}$>$ $>$ get\+Contours (\begin{DoxyParamCaption}\item[{std\+::vector$<$ \mbox{\hyperlink{class_rectangle}{Rectangle}} $>$ \&}]{rectangles }\end{DoxyParamCaption})}
+
+A function to get the contours of the union of rectangles \begin{DoxyReturn}{Returns}
+vector of pair of points, where the pair represents 2 ends of a line segment 
+\end{DoxyReturn}
