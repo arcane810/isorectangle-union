@@ -26,22 +26,30 @@ int main(int argc, char *argv[]) {
     long double mes = getMeasure(rectangles);
     cout << setprecision(18);
     fout << setprecision(18);
-    cout << mes << "\n";
-    fout << mes << "\n";
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     cout << "Time Taken for measure: " << duration.count() / 1000000.0
          << " s\n";
-    std::vector<std::pair<Point, Point>> hcontours = getContours(rectangles);
-    fout << hcontours.size() << "\n";
-    for (auto it : hcontours) {
-        fout << it.first.x << " " << it.first.y << " " << it.second.x << " "
-             << it.second.y << "\n";
-    }
+    std::vector<std::pair<Point, Point>> contours = getContours(rectangles);
     auto stop2 = high_resolution_clock::now();
     auto duration2 = duration_cast<microseconds>(stop2 - stop);
     cout << "Time Taken for contours: " << duration2.count() / 1000000.0
          << " s\n";
+    long double cl = 0;
+    for (auto it : contours) {
+        long double dx = abs(it.first.x - it.second.x);
+        long double dy = abs(it.first.y - it.second.y);
+        cl += (dx + dy);
+    }
+    cout << "Measure: " << mes << "\n";
+    cout << "Contour Perimeter: " << cl << "\n";
+    fout << mes << "\n";
+    fout << cl << "\n";
+    fout << contours.size() << "\n";
+    for (auto it : contours) {
+        fout << it.first.x << " " << it.first.y << " " << it.second.x << " "
+             << it.second.y << "\n";
+    }
 
     return 0;
 }

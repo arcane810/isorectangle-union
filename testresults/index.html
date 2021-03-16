@@ -9,10 +9,12 @@
     </head>
 
     <body>
-        <h1>Isorectangles Union - Test Results</h1>
+        <h1 class="header">Isorectangles Union - Test Results</h1>
         <p>
-            The Algorithm works pretty well for even large cases and is pretty
-            robust.
+            The Algorithm works O(NlogN) worse case complexity where N is the
+            number of input rectangles. After a lot of testing, we can say that
+            this implementation is pretty robust and works quite fast for huge
+            testcases too.
         </p>
         <table>
             <tr>
@@ -47,7 +49,7 @@
                 <td>0.001178 s</td>
             </tr>
             <tr>
-                <th>Test6 (100000 Rectangles)</th>
+                <th>Test6 (10<sup>5</sup> Rectangles)</th>
                 <td>1.738546 s</td>
                 <td>1.805002 s</td>
             </tr>
@@ -62,26 +64,80 @@
                 <td>0.14964 s</td>
             </tr>
             <tr>
-                <th>Test9 (1000000 Rectangles)</th>
+                <th>Test9 (10<sup>6</sup> Rectangles)</th>
                 <td>21.458537 s</td>
                 <td>25.739285 s</td>
             </tr>
         </table>
         <br />
         <h3>Test1</h3>
-        <img src="./test1_polygon.png" />
-        <p>This was just a simple case of 5 points manually created</p>
+        <p>Manually Created Test with 7 rectangles</p>
+        <div class="image-container">
+            <img src="../tests/test1.in.rects.png" />
+            <img src="../tests/test1.in.contours.png" />
+        </div>
         <h3>Test2</h3>
-        <img src="./test2_polygon.png" />
-        <p>A randomly generated polygon with 20 points</p>
+        <p>Randomly generated case with 100 rectangles</p>
+        <div class="image-container">
+            <img src="../tests/test2.in.rects.png" />
+            <img src="../tests/test2.in.contours.png" />
+        </div>
         <h3>Test3</h3>
-        <img src="./test3_polygon.png" />
-        <p>A randomly generated polygon with 200 points</p>
+        <p>Randomly generated case with 1000 rectangles</p>
+        <div class="image-container">
+            <img src="../tests/test3.in.rects.png" />
+            <img src="../tests/test3.in.contours.png" />
+        </div>
         <h3>Test4</h3>
-        <img src="./test4_polygon.png" />
-        <p>A randomly generated polygon with 2000 points</p>
+        <p>Manually Created Test with 14 rectangles</p>
+        <div class="image-container">
+            <img src="../tests/test4.in.rects.png" />
+            <img src="../tests/test4.in.contours.png" />
+        </div>
         <h3>Test5</h3>
-        <p>A randomly generated polygon with 200000 points</p>
+        <p>
+            Randomly generated case with rectangles in 4 quarters. 100
+            Rectangles
+        </p>
+        <div class="image-container">
+            <img src="../tests/test5.in.rects.png" />
+            <img src="../tests/test5.in.contours.png" />
+        </div>
+        <h3>Test6</h3>
+        <p>
+            Randomly generated case with rectangles in 4 quarters. 10<sup
+                >5</sup
+            >
+            Rectangles
+        </p>
+        <div class="image-container">
+            <img src="../tests/test6.in.contours.png" />
+        </div>
+        <h3>Test7</h3>
+        <p>Manually Created Test with 9 rectangles</p>
+        <div class="image-container">
+            <img src="../tests/test7.in.rects.png" />
+            <img src="../tests/test7.in.contours.png" />
+        </div>
+        <h3>Test8</h3>
+        <p>
+            Randomly generated case with rectangles in 4 quarters. 10000
+            Rectangles
+        </p>
+        <div class="image-container">
+            <img src="../tests/test8.in.rects.png" />
+            <img src="../tests/test8.in.contours.png" />
+        </div>
+        <h3>Test9</h3>
+        <p>
+            Randomly generated case with rectangles in 4 quarters. 10<sup
+                >6</sup
+            >
+            Rectangles
+        </p>
+        <div class="image-container">
+            <img src="../tests/test9.in.contours.png" />
+        </div>
         <br />
         <br />
     </body>

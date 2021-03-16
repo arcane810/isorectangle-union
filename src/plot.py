@@ -6,25 +6,28 @@ ofile = ifile + ".out"
 
 with open(ifile) as f:
     n = int(f.readline())
-    for i in range(n):
-        x1, x2, y1, y2 = map(float, f.readline().split())
-        x = []
-        y = []
-        x.append(x1)
-        x.append(x1)
-        x.append(x2)
-        x.append(x2)
-        x.append(x1)
-        y.append(y1)
-        y.append(y2)
-        y.append(y2)
-        y.append(y1)
-        y.append(y1)
-        plt.plot(x, y, color="black")
+    if n <= 10000:
+        for i in range(n):
+            x1, x2, y1, y2 = map(float, f.readline().split())
+            x = []
+            y = []
+            x.append(x1)
+            x.append(x1)
+            x.append(x2)
+            x.append(x2)
+            x.append(x1)
+            y.append(y1)
+            y.append(y2)
+            y.append(y2)
+            y.append(y1)
+            y.append(y1)
+            plt.plot(x, y, color="black")
+    plt.savefig(ifile + ".rects.png")
 
 with open(ofile) as f:
-    measure = float(f.readline())
-    s = "Measure: " + str(measure)
+    measure = f.readline()
+    perimeter = f.readline()
+    s = "Measure: " + measure + "  Contour Perimeter: " + perimeter
     plt.suptitle(s)
     n = int(f.readline())
     for i in range(n):
@@ -36,4 +39,5 @@ with open(ofile) as f:
         x.append(x2)
         y.append(y2)
         plt.plot(x, y, color="cyan")
-plt.show()
+    plt.savefig(ifile + ".contours.png")
+# plt.show()

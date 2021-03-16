@@ -16,9 +16,9 @@ int32_t main() {
     ios_base::sync_with_stdio(false);
     cin.tie(NULL);
 
-    int n = 1000000;
+    int n = 100;
 
-    int m = 800000;
+    int m = 80;
 
     cout << n << "\n";
     for (int i = 0; i < n / 5; i++) {
@@ -33,7 +33,7 @@ int32_t main() {
 
     for (int i = 0; i < n / 5; i++) {
         int x1, x2, y1, y2;
-        x1 = m + 1000 + rng() % (m / 2);
+        x1 = m + rng() % (m / 2);
         x2 = rng() % (m / 4);
         y1 = rng() % (m / 2);
         y2 = rng() % (m / 2);
@@ -53,7 +53,7 @@ int32_t main() {
 
     for (int i = 0; i < n / 5; i++) {
         int x1, x2, y1, y2;
-        x1 = m + 1000 + rng() % (m / 4);
+        x1 = m + rng() % (m / 4);
         x2 = rng() % (m / 2);
         y1 = m + rng() % (m / 2);
         y2 = rng() % (m / 2);
